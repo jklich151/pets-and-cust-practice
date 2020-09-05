@@ -53,4 +53,20 @@ class GroomerTest < Minitest::Test
     groomer.add_customer(billy)
     assert_equal [joel], groomer.customers_with_oustanding_balances
   end
+
+  def test_groomers_have_customers_with_pets
+    groomer = Groomer.new("The Hair Ball")
+    joel = Customer.new("Joel", 2)
+    billy = Customer.new("Billy", 3)
+    groomer.add_customer(joel)
+    groomer.add_customer(billy)
+    samson = Pet.new({name: "Samson", type: :dog})
+    lucy = Pet.new({name: "Lucy", type: :cat})
+    joel.adopt(samson)
+    joel.adopt(lucy)
+    molly = Pet.new({name: "Molly", type: :cat})
+    billy.adopt(molly)
+
+    assert_equal [], groomer.customers
+  end
 end

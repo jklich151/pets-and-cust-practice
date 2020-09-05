@@ -6,53 +6,59 @@ require './lib/pet'
 
 class DayCareTest < Minitest::Test
   def test_it_exists
-    day_care = DayCare.new("The Dog Spot")
-    assert_instance_of DayCare, day_care
+    daycare = DayCare.new("Kid Care")
+
+    assert_instance_of DayCare, daycare
   end
 
-  def test_it_has_a_name
-    day_care = DayCare.new("The Dog Spot")
-    assert_equal "The Dog Spot", day_care.name
+  def test_it_has_attributes
+    daycare = DayCare.new("Kid Care")
+
+    assert_equal "Kid Care", daycare.name
   end
 
-  def test_it_starts_with_no_customers
-    day_care = DayCare.new("The Dog Spot")
-    assert_equal [], day_care.customers
-  end
-
-  def test_it_can_add_customers
-    day_care = DayCare.new("The Dog Spot")
+  def test_can_have_customers
+    daycare = DayCare.new("Kid Care")
     joel = Customer.new("Joel", 2)
-    billy = Customer.new("Billy", 3)
-    day_care.add_customer(joel)
-    day_care.add_customer(billy)
-    assert_equal [joel, billy], day_care.customers
+    matt = Customer.new("Matt", 3)
+
+    daycare.add_customer(joel)
+    daycare.add_customer(matt)
+
+    assert_equal [joel, matt], daycare.customers
   end
 
-  def test_it_can_list_unfed_pets
+  def test_can_find_by_id
+    daycare = DayCare.new("Kid Care")
     joel = Customer.new("Joel", 2)
+    matt = Customer.new("Matt", 3)
+
+    daycare.add_customer(joel)
+    daycare.add_customer(matt)
+
+    assert_equal joel, daycare.find_customer(2)
+  end
+
+  def test_pets_unfed
+    daycare = DayCare.new("Kid Care")
+    joel = Customer.new("Joel", 2)
+    matt = Customer.new("Matt", 3)
+
+    daycare.add_customer(joel)
+    daycare.add_customer(matt)
+
+    assert_equal [], daycare.hungry_pets
+
     samson = Pet.new({name: "Samson", type: :dog})
     lucy = Pet.new({name: "Lucy", type: :cat})
+
     joel.adopt(samson)
     joel.adopt(lucy)
-    billy = Customer.new("Billy", 3)
-    molly = Pet.new({name: "Molly", type: :cat})
-    billy.adopt(molly)
-    day_care = DayCare.new("The Dog Spot")
-    day_care.add_customer(joel)
-    day_care.add_customer(billy)
-    lucy.feed
 
-    assert_equal [samson, molly], day_care.unfed_pets
-  end
+    assert_equal [samson, lucy], daycare.hungry_pets
 
-  def test_it_can_find_customer_by_id
-    joel = Customer.new("Joel", 2)
-    joel.charge(10)
-    billy = Customer.new("Billy", 3)
-    day_care = DayCare.new("The Dog Spot")
-    day_care.add_customer(joel)
-    day_care.add_customer(billy)
-    assert_equal joel, day_care.customer_by_id(2)
+    samson.feed
+
+    assert_equal [lucy], daycare.hungry_pets
   end
 end

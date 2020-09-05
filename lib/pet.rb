@@ -1,6 +1,5 @@
 class Pet
-  attr_reader :name,
-              :type
+  attr_reader :name, :type
 
   def initialize(attributes)
     @name = attributes[:name]
